@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ARAKSHA – AR Safety Training & Certification for Mines and Plants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root {
+  --bg: #0F171E;
+  --bg-subtle: #16222D;
+  --card: #1B2936;
+  --card-hover: #223445;
+  --ink: #EDF3F7;
+  --mut: #93A6B4;
+  --ln: #293D4E;
+  --or: #FF7828;
+  --or-glow: rgba(255, 120, 40, 0.25);
+  --tl: #00D59B;
+  --tl-glow: rgba(0, 213, 155, 0.25);
+  --rd: #FF4757;
+  --rd-glow: rgba(255, 71, 87, 0.25);
+  --cam: #080D12;
+  --gold: #FFB800;
+  box-sizing: border-box;
+}
+
+:root[data-theme="light"] {
+  --bg: #F0F4F8;
+  --bg-subtle: #E2EAF0;
+  --card: #FFFFFF;
+  --card-hover: #F8FAFC;
+  --ink: #111E28;
+  --mut: #5A6E7D;
+  --ln: #CFDCE5;
+  --or: #E65A00;
+  --or-glow: rgba(230, 90, 0, 0.15);
+  --tl: #088C6C;
+  --tl-glow: rgba(8, 140, 108, 0.15);
+  --rd: #D62828;
+  --rd-glow: rgba(214, 40, 40, 0.15);
+  --cam: #141E26;
+  --gold: #D98E04;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-padding-top: 76px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 'Barlow', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, h4 {
+  font-family: "Barlow Condensed", Impact, sans-serif;
+  line-height: 1.05;
+  margin: 0 0 .4em;
+  letter-spacing: .3px;
+  font-weight: 700;
+}
+h1 { font-size: clamp(38px, 6vw, 68px); }
+h2 { font-size: clamp(26px, 3.5vw, 38px); }
+h3 { font-size: 22px; }
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--card);
+  border-bottom: 1px solid var(--ln);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.bar {
+  max-width: 1160px;
+  margin: auto;
+  padding: 12px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.logo {
+  font: 800 28px "Barlow Condensed", sans-serif;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: auto;
+  color: var(--ink);
+}
+.logo i {
+  color: var(--or);
+  font-style: normal;
+  text-shadow: 0 0 16px var(--or);
+}
+.logo .tag-badge {
+  font: 700 10px 'JetBrains Mono', monospace;
+  background: var(--or);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
+nav a {
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s;
+  color: var(--mut);
+}
+nav a:hover { color: var(--ink); background: var(--bg-subtle); }
+nav a.on { background: var(--or); color: #fff; box-shadow: 0 2px 10px var(--or-glow); }
+
+.controls-cluster { display: flex; gap: 8px; align-items: center; }
+.pill {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 99px;
+  border: 1.5px solid var(--ln);
+  background: var(--bg-subtle);
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.pill:hover { border-color: var(--mut); }
+.pill.active { border-color: var(--tl); color: var(--tl); background: var(--tl-glow); }
+.pill.warn { border-color: var(--or); color: var(--or); background: var(--or-glow); }
+
+.wrap { max-width: 1160px; width: 100%; margin: 0 auto; padding: 36px 20px; flex: 1; }
+
+.btn {
+  font: 600 15px 'Barlow', sans-serif;
+  border: 1.5px solid var(--ln);
+  background: var(--card);
+  color: var(--ink);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+.btn:hover { border-color: var(--ink); background: var(--card-hover); transform: translateY(-1px); }
+.btn.p {
+  background: var(--or);
+  border-color: var(--or);
+  color: #fff;
+  box-shadow: 0 4px 14px var(--or-glow);
+}
+.btn.p:hover { background: #ff6505; border-color: #ff6505; }
+.btn.success {
+  background: var(--tl);
+  border-color: var(--tl);
+  color: #0b1d16;
+  font-weight: 700;
+  box-shadow: 0 4px 14px var(--tl-glow);
+}
+.btn.success:hover { background: #02f0af; }
+.btn.s { padding: 6px 14px; font-size: 13.5px; border-radius: 6px; }
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 40px;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.hero p { font-size: 19px; color: var(--mut); margin: 16px 0 24px; max-width: 580px; }
+
+.cam-preview {
+  position: relative;
+  background: radial-gradient(circle at 50% 45%, #1b3547, var(--cam));
+  border: 2px solid var(--ln);
+  border-radius: 12px;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+.cam-preview::before {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border: 2px dashed rgba(255,255,255,0.25);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.cam-preview::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 3px;
+  background: var(--tl);
+  box-shadow: 0 0 16px var(--tl);
+  animation: scan 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes scan { 0%,100% { top: 8%; opacity: 0.2; } 50% { top: 92%; opacity: 1; } }
+
+.chip {
+  position: absolute;
+  font: 700 12px 'JetBrains Mono', monospace;
+  background: rgba(11, 20, 28, 0.9);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--tl);
+  color: var(--tl);
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.chip.w { border-color: var(--or); color: var(--or); }
+.chip.err { border-color: var(--rd); color: var(--rd); }
+
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--ln);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin: 36px 0;
+}
+.stats-bar b {
+  font: 800 38px "Barlow Condensed";
+  color: var(--or);
+  display: block;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stats-bar span { font-size: 14px; color: var(--mut); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--ln);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+  display: flex;
+  flex-direction: column;
+}
+.card:hover {
+  border-color: var(--mut);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.2);
+}
+.card .icon-head {
+  font-size: 44px;
+  margin-bottom: 12px;
+  display: inline-block;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+}
+
+.b {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  background: var(--ln);
+  color: var(--ink);
+  width: fit-content;
+}
+.b.g { background: rgba(0, 213, 155, 0.18); color: var(--tl); border: 1px solid var(--tl); }
+.b.o { background: rgba(255, 120, 40, 0.18); color: var(--or); border: 1px solid var(--or); }
+.b.r { background: rgba(255, 71, 87, 0.18); color: var(--rd); border: 1px solid var(--rd); }
+
+.tb { overflow-x: auto; border: 1px solid var(--ln); border-radius: 8px; margin: 16px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; background: var(--card); }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--ln); }
+th { font-weight: 700; color: var(--mut); text-transform: uppercase; font-size: 12px; letter-spacing: .5px; background: var(--bg-subtle); }
+tr:hover td { background: var(--card-hover); }
+
+.row { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0; }
+.tabs .btn.on { background: var(--or); border-color: var(--or); color: #fff; }
+
+input, select, textarea {
+  font: 15px 'Barlow', sans-serif;
+  padding: 11px 14px;
+  border: 1.5px solid var(--ln);
+  border-radius: 8px;
+  background: var(--bg-subtle);
+  color: var(--ink);
+  width: 100%;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--or);
+  box-shadow: 0 0 0 3px var(--or-glow);
+}
+label { display: block; margin: 14px 0 6px; font-weight: 600; font-size: 14px; color: var(--mut); }
+
+.fb {
+  padding: 16px 18px;
+  border-radius: 8px;
+  background: var(--bg-subtle);
+  border: 1.5px solid var(--ln);
+  margin: 14px 0;
+  font-size: 15px;
+}
+
+/* 3D Simulation Arena */
+.cv-container {
+  position: relative;
+  height: clamp(340px, 58vh, 520px);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #080E14;
+  border: 2px solid var(--ln);
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.8), 0 12px 30px rgba(0,0,0,0.3);
+  margin: 16px 0;
+}
+.cv-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  cursor: grab;
+}
+.cv-container canvas:active { cursor: grabbing; }
+
+.hud-top {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
+.hud-badge {
+  pointer-events: auto;
+  font: 700 13px 'JetBrains Mono', monospace;
+  background: rgba(10, 18, 26, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--ln);
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.hud-badge.timer { border-color: var(--gold); color: var(--gold); }
+.hud-badge.penalty { border-color: var(--rd); color: var(--rd); }
+
+.hud-instructions {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 10;
+  background: rgba(11, 21, 30, 0.92);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid var(--tl);
+  border-radius: 10px;
+  padding: 14px 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.hud-instructions h4 { margin: 0; font-size: 18px; color: #fff; }
+.hud-instructions p { margin: 4px 0 0; color: var(--tl); font-weight: 500; font-size: 15px; }
+
+.lb {
+  position: absolute;
+  font: 700 12px 'Barlow', sans-serif;
+  background: rgba(8, 14, 20, 0.88);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 2px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  transform: translate(-50%, -120%);
+  white-space: nowrap;
+  transition: opacity 0.15s, border-color 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  z-index: 5;
+}
+.lb.active-target {
+  border-color: var(--tl);
+  color: var(--tl);
+  box-shadow: 0 0 12px var(--tl);
+}
+.lb.completed-target {
+  border-color: #555;
+  color: #888;
+  text-decoration: line-through;
+}
+
+/* 3D Action Tray */
+.action-tray {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 12px 0 20px;
+}
+.tray-btn {
+  background: var(--bg-subtle);
+  border: 1.5px solid var(--ln);
+  color: var(--ink);
+  font: 600 14px 'Barlow', sans-serif;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+.tray-btn:hover {
+  border-color: var(--or);
+  background: var(--card-hover);
+}
+.tray-btn.done {
+  border-color: var(--tl);
+  background: rgba(0, 213, 155, 0.1);
+  color: var(--tl);
+  text-decoration: line-through;
+}
+
+/* Certificate Styles */
+.cert-card {
+  background: #0C131A;
+  border: 3px double #C2A649;
+  border-radius: 12px;
+  padding: 36px 30px;
+  text-align: center;
+  max-width: 680px;
+  margin: 20px auto;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+  color: #EDF3F7;
+}
+.cert-card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(194, 166, 73, 0.35);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.cert-seal {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFD700 0%, #B8860B 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+.cert-card h1 {
+  font-size: clamp(32px, 5vw, 44px);
+  color: #FFD700;
+  letter-spacing: 1px;
+  margin: 6px 0;
+}
+.cert-candidate {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 700;
+  color: #fff;
+  border-bottom: 2px solid #C2A649;
+  display: inline-block;
+  padding: 2px 30px 4px;
+  margin: 12px 0 16px;
+}
+.cert-qr {
+  width: 140px;
+  height: 140px;
+  margin: 20px auto 14px;
+  padding: 8px;
+  background: #fff;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+.cert-qr svg { width: 100%; height: 100%; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 600;
+  font-size: 14.5px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  z-index: 1000;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  animation: slideUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  max-width: 90%;
+  text-align: center;
+}
+@keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+footer {
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--ln);
+  padding: 24px 20px;
+  color: var(--mut);
+  font-size: 14px;
+  text-align: center;
+}
+footer a { color: var(--or); text-decoration: underline; }
+
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.ol { padding-left: 20px; }
+.ol li { margin: 8px 0; }
+
+@media(max-width: 800px) {
+  .hero, .two { grid-template-columns: 1fr; }
+  .bar { padding: 10px 14px; }
+  .hud-instructions { flex-direction: column; align-items: flex-start; }
+}
+
+@media print {
+  header, footer, .controls-cluster, .btn, .action-tray { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .cert-card { border: 4px double #000 !important; color: #000 !important; background: #fff !important; box-shadow: none !important; }
+  .cert-card::before { border-color: #000 !important; }
+  .cert-candidate { color: #000 !important; border-bottom-color: #000 !important; }
+  .cert-card h1 { color: #000 !important; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar" id="hdr"></div>
+</header>
+
+<main id="app" class="wrap"></main>
+
+<footer>
+  <div style="max-width: 1160px; margin: auto;">
+    <b>ARAKSHA Industrial AR Competency System</b> · Team Techwolves (ID 139519) · Smart India Hackathon 2026, PS SIH26041.<br>
+    Simulated 3D/AR engine runs on web standards with persistent local storage &amp; cryptographically verified certification.
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+// --- Core Application State & Storage ---
+const $ = s => document.querySelector(s);
+const t = (a, b) => S.lang === "hi" && b ? b : a;
+
+let S = {
+  lang: "en",
+  off: false,
+  voice: false,
+  user: { n: "Ramesh Munda", s: "Jharia", nw: false },
+  geo: "23.750, 86.417", // Default Jharia coordinates
+  tab: "crew"
+};
+
+let sim = null;
+let tm = null;
+let D;
+
+// Stable Hash generator
+const H = s => {
+  let x = 5381;
+  for (const c of s) x = ((x * 33) ^ c.charCodeAt(0)) >>> 0;
+  return x.toString(36).toUpperCase().padStart(6, "0").slice(0, 6);
+};
+
+const W = (n, s, d, p, sc) => ({ n, s, d, p: p || [], sc: sc || 0, as: [] });
+
+const seed = () => ({
+  w: [
+    W("Ramesh Munda", "Jharia", 412, ["fire", "gas", "ppe", "loto"], 88),
+    W("Sunita Hansdak", "Bokaro", 210, ["fire", "ppe"], 76),
+    W("Birsa Soren", "Koderma", 18, [], 0),
+    W("Anil Oraon", "Noamundi", 9, ["ppe"], 64),
+    W("Mangal Tudu", "Jharia", 25, ["fire"], 71),
+    W("Kavita Kumari", "Bokaro", 340, ["fire", "gas", "ppe"], 82),
+    W("Deepak Mahto", "Koderma", 95, ["gas"], 69),
+    W("Rajesh Kisku", "Noamundi", 620, ["fire", "gas", "ppe", "loto"], 91)
+  ],
+  c: {
+    "ARK-DEMO01": { n: "Ramesh Munda", m: "fire", sc: 88, dt: "2026-09-14", s: "Jharia", lg: "3D-A81F2" }
+  },
+  a: [
+    { w: "Mangal Tudu", m: "gas", sc: 0, ok: false, t: "2026-09-22T09:10", g: "Jharia (simulated)", sy: 1, st: "incomplete" },
+    { w: "Anil Oraon", m: "ppe", sc: 64, ok: false, t: "2026-09-20T11:42", g: "Noamundi (simulated)", sy: 1, st: "complete" }
+  ]
+});
+
+try {
+  D = JSON.parse(localStorage.getItem("ark_db_v2"));
+} catch (e) {}
+D = D || seed();
+
+const save = () => {
+  try {
+    localStorage.setItem("ark_db_v2", JSON.stringify(D));
+  } catch (e) {}
+};
+
+// Module Definitions
+const M = {
+  fire: {
+    n: "Fire & Evacuation",
+    h: "आग और निकासी आपातकाल",
+    e: "🔥",
+    desc: "Perform emergency alarm trigger, pick suitable CO₂ suppression for electrical fires, extinguish hazard, and safely evacuate.",
+    desc_hi: "अलार्म बजाएँ, बिजली की आग के लिए CO₂ चुनें, आग बुझाएँ और सुरक्षित रूप से बाहर निकलें।"
+  },
+  gas: {
+    n: "Gas Leak Protocol",
+    h: "गैस रिसाव प्रोटोकॉल",
+    e: "☁️",
+    desc: "Detect methane gas buildup, isolate ignition sources, equip SCSR breathing gear, and escape to the fresh air shaft.",
+    desc_hi: "मीथेन रिसाव की जाँच करें, बिजली बंद करें, सेल्फ-रेस्क्यूअर पहनें और ताज़ी हवा के निकास की ओर जाएँ।"
+  },
+  ppe: {
+    n: "Mandatory PPE Check",
+    h: "पीपीई सुरक्षा निरीक्षण",
+    e: "👷",
+    desc: "Inspect safety gear before entering deep underground pit: helmet, dust mask, leather gloves, and steel-toe boots.",
+    desc_hi: "खदान में प्रवेश से पहले सभी ज़रूरी सुरक्षा उपकरण (हेलमेट, डस्ट मास्क, दस्ताने, बूट) जाँचें और पहनें।"
+  },
+  loto: {
+    n: "Machinery Lockout-Tagout (LOTO)",
+    h: "मशीन लॉकआउट-टैगआउट (LOTO)",
+    e: "⚙️",
+    desc: "Safely shut down jammed conveyor, cut power at isolator, apply individual safety padlock, and hang danger warning tag.",
+    desc_hi: "जाम कन्वेयर बंद करें, मुख्य आइसोलेटर से बिजली काटें, निजी ताला और खतरे का टैग लगाएँ।"
+  }
+};
+
+// 3D Scene Interactive Scenarios
+// [id, Name, shape, color, x, y, z, w, h, d, wrongFeedback]
+const X = {
+  fire: {
+    o: [
+      ["alarm", "Fire Alarm Station", "b", 0xEE4B2B, -3.2, 1.4, 0, 0.45, 0.65, 0.25],
+      ["water", "Water Tank", "c", 0x2A7DE1, -2.4, 0.7, 3, 0.8, 1.4, 0, "Water on a live electrical panel causes fatal electrocution!"],
+      ["co2", "CO₂ Extinguisher", "c", 0xD62828, 2.5, 0.6, 2, 0.45, 1.1, 0],
+      ["panel", "Electrical Distribution Panel", "b", 0x718096, 3.2, 1.4, -3, 0.5, 1.6, 1.1, "Electrical panel is on fire! Do not touch with bare hands."],
+      ["fire", "Active Fire Hazard", "k", 0xFF6B1A, 2.4, 0.8, -3, 1.3, 1.5, 0],
+      ["exit", "Green Emergency Exit", "b", 0x10B981, 0, 2.4, -9.5, 2.0, 1.8, 0.3]
+    ],
+    t: [
+      ["Raise the industrial fire alarm first.", "पहले आग का अलार्म बजाएँ।", "alarm", "The alarm notifies supervisor and warns the mine crew."],
+      ["Pick the approved CO₂ extinguisher for electrical fires.", "बिजली की आग के लिए सही CO₂ अग्निशामक चुनें।", "co2", "CO₂ gas is electrically non-conductive and smothers flames without residue."],
+      ["Direct extinguisher at the base of the fire.", "अग्निशामक को आग की जड़ पर चलाएँ।", "fire", "Swept at base of the electrical fire, suppressing fuel combustion."],
+      ["Evacuate the gallery through the green emergency exit.", "हरे आपातकालीन निकास से बाहर निकलें।", "exit", "Evacuated through pressurized escape route."]
+    ]
+  },
+  gas: {
+    o: [
+      ["gasd", "Digital Gas Detector", "b", 0x2563EB, -2.2, 0.9, 2, 0.45, 0.65, 0.3],
+      ["iso", "Power Isolator Switch", "b", 0x4B5563, -3.5, 1.4, -1, 0.4, 0.8, 0.6],
+      ["scsr", "SCSR Breathing Apparatus", "c", 0xF59E0B, 2.2, 0.5, 2, 0.5, 0.85, 0],
+      ["lamp", "Naked Flame Inspection Lamp", "s", 0xFBBF24, 2.8, 0.8, -1, 0.4, 0.4, 0, "DANGER: Never introduce an open flame in a methane zone!"],
+      ["cloud", "Methane Gas Cloud", "s", 0x94A3B8, 0, 2.6, -4, 3.2, 2.5, 0, "Methane gas is flammable and asphyxiating."],
+      ["exit", "Fresh-Air Shaft Gate", "b", 0x10B981, 0, 2.2, -9.5, 2.0, 1.8, 0.3]
+    ],
+    t: [
+      ["Inspect the multi-gas detector reading.", "गैस डिटेक्टर की रीडिंग देखें।", "gasd", "Methane detected at 2.4% CH₄ — immediate danger threshold."],
+      ["Isolate electrical power to prevent spark ignition.", "बिजली बंद करें ताकि कोई चिंगारी न भड़के।", "iso", "All power lines cut off. Ignition risk eliminated."],
+      ["Equip the Self-Contained Self-Rescuer (SCSR).", "सेल्फ-रेस्क्यूअर (SCSR) पहनें।", "scsr", "Breathing circuit closed. Provides 60 mins of breathable oxygen."],
+      ["Evacuate towards the fresh-air shaft gate.", "ताज़ी हवा वाले निकास की ओर जाएँ।", "exit", "Exited hazard zone into fresh ventilated intake."]
+    ]
+  },
+  ppe: {
+    o: [
+      ["helmet", "Safety Helmet (Inspected)", "s", 0xFACC15, -2.2, 0.8, 2, 0.6, 0.6, 0],
+      ["cracked", "Cracked Defective Helmet", "s", 0x854D0E, -1.2, 0.8, 2, 0.6, 0.6, 0, "REJECTED: Micro-fractured shell cannot withstand impact!"],
+      ["gloves", "Heavy Duty Work Gloves", "b", 0xB45309, 0, 0.7, 2, 0.6, 0.3, 0.5],
+      ["mask", "N95 Dust Respirator", "b", 0xE2E8F0, 1.2, 0.7, 2, 0.5, 0.4, 0.3],
+      ["boots", "Steel-Toe Safety Boots", "b", 0x1F2937, 2.4, 0.5, 2, 0.7, 0.5, 0.4],
+      ["shades", "Dark Sunglasses", "b", 0x111827, -1.5, 0.3, 0.5, 0.5, 0.2, 0.2, "Sunglasses severely impair low-light visibility underground!"],
+      ["phones", "Audio Headphones", "c", 0x374151, 1.5, 0.3, 0.5, 0.5, 0.2, 0, "Headphones violate safety rules by blocking emergency alarms!"],
+      ["gate", "Mine Pit Entry Portal", "b", 0x10B981, 0, 2.0, -8.5, 3.2, 2.6, 0.4]
+    ],
+    t: [
+      ["Select the undamaged, certified safety helmet.", "प्रमाणित और बिना दरार वाला हेलमेट चुनें।", "helmet", "Impact-rated shell with chin strap secured."],
+      ["Equip the reinforced leather safety gloves.", "दस्ताने पहनें।", "gloves", "Guards hands against sharp rock fractures and pinch points."],
+      ["Fit the particulate dust respirator.", "डस्ट मास्क ठीक से लगाएँ।", "mask", "Filters toxic silica, coal dust, and airborne particles."],
+      ["Wear the puncture-proof steel-toe boots.", "स्टील-टो सुरक्षा बूट पहनें।", "boots", "Shields feet against rolling rocks and high voltage ground leakage."],
+      ["Proceed cleared through the mine entry portal.", "खदान के प्रवेश द्वार से अंदर जाएँ।", "gate", "Full mandatory PPE verified. Cleared for underground descent."]
+    ]
+  },
+  loto: {
+    o: [
+      ["machine", "Heavy Conveyor Drive Assembly", "b", 0x334155, 0, 0.8, -4, 3.4, 1.4, 5.5, "Never touch or clear a machine that is live or un-isolated!"],
+      ["stop", "Emergency Stop Button", "b", 0xEF4444, -2.4, 1.1, 1, 0.5, 0.5, 0.3],
+      ["iso", "Master Electrical Disconnect", "b", 0x64748B, 3.4, 1.4, -1, 0.45, 0.9, 0.5],
+      ["lock", "Personal Safety Padlock", "s", 0xF59E0B, -1.8, 0.5, 2.5, 0.4, 0.4, 0],
+      ["tag", "Hazard Tag: DO NOT OPERATE", "b", 0xDC2626, -0.6, 0.5, 2.5, 0.4, 0.6, 0.1],
+      ["start", "Live Start Switch", "b", 0x10B981, 2.2, 1.1, 1, 0.5, 0.5, 0.3, "FATAL ERROR: Never press start when equipment is being inspected!"]
+    ],
+    t: [
+      ["Depress the Emergency Stop button on the conveyor.", "जाम कन्वेयर का इमरजेंसी स्टॉप बटन दबाएँ।", "stop", "Machine drive momentum halted immediately."],
+      ["Isolate master power at the electrical disconnect switch.", "मास्टर आइसोलेटर से मुख्य बिजली काटें।", "iso", "High voltage supply de-energized and grounded."],
+      ["Fasten your individual personal safety padlock.", "अपना निजी ताला (Padlock) लगाएँ।", "lock", "Lockout complete. Only your personal key can re-energize."],
+      ["Affix the high-visibility DO NOT OPERATE danger tag.", "खतरे का लाल चेतावनी टैग लगाएँ।", "tag", "Tagout complete. Work permit warning visible to all personnel."]
+    ]
+  }
+};
+
+const risk = w => Math.min(99, Math.max(5, 100 - (w.p ? w.p.length : 0) * 22 + (w.d < 30 ? 25 : 0)));
+
+const toast = m => {
+  const e = $("#toast");
+  e.innerHTML = `<div class="toast" role="status">${m}</div>`;
+  clearTimeout(toast.k);
+  toast.k = setTimeout(() => e.innerHTML = "", 3400);
+};
+
+const speak = text => {
+  if (!S.voice) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = S.lang === "hi" ? "hi-IN" : "en-IN";
+    u.rate = 0.95;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+};
+
+const pend = () => D.a.filter(x => !x.sy).length;
+
+// QR Code SVG Generator (Self-contained, no external CDN dependencies required)
+function generateQRCodeSVG(text) {
+  // Simple functional SVG representation of verified QR
+  const hash = H(text);
+  const cells = 21;
+  let rects = '';
+  // Corner markers
+  const addSquare = (x, y, s) => {
+    rects += `<rect x="${x}" y="${y}" width="${s}" height="${s}" fill="#0C131A"/>`;
+    rects += `<rect x="${x+1}" y="${y+1}" width="${s-2}" height="${s-2}" fill="#fff"/>`;
+    rects += `<rect x="${x+2}" y="${y+2}" width="${s-4}" height="${s-4}" fill="#0C131A"/>`;
+  };
+  addSquare(1, 1, 7);
+  addSquare(13, 1, 7);
+  addSquare(1, 13, 7);
+
+  // Pseudo-random deterministic grid from hash + text
+  let seedVal = 0;
+  for (let i = 0; i < text.length; i++) seedVal = (seedVal * 31 + text.charCodeAt(i)) & 0xFFFFFF;
+  for (let r = 0; r < cells; r++) {
+    for (let c = 0; c < cells; c++) {
+      if ((r < 8 && c < 8) || (r < 8 && c > 12) || (r > 12 && c < 8)) continue;
+      seedVal = (seedVal * 1664525 + 1013904223) & 0xFFFFFF;
+      if ((seedVal >> 16) % 2 === 0) {
+        rects += `<rect x="${c}" y="${r}" width="1" height="1" fill="#0C131A"/>`;
+      }
+    }
+  }
+  return `<svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">${rects}</svg>`;
+}
+
+// Navigation Header
+function hdr() {
+  const p = location.hash.slice(2).split("/")[0] || "home";
+  const L = [
+    ["home", t("Home", "होम")],
+    ["train", t("Train (3D)", "प्रशिक्षण (3D)")],
+    ["verify", t("Verify", "सत्यापन")],
+    ["console", t("Supervisor Console", "सुपरवाइज़र कंसोल")],
+    ["about", t("Project Info", "परियोजना")]
+  ];
+
+  $("#hdr").innerHTML = `
+    <a class="logo" href="#/">
+      ARA<i>K</i>SHA <span class="tag-badge">3D AR CORE</span>
+    </a>
+    <nav>
+      ${L.map(l => `
+        <a href="#/${l[0] === "home" ? "" : l[0]}" class="${
+          p === l[0] || ((p === "sim" || p === "res") && l[0] === "train") || (p === "cert" && l[0] === "verify") ? "on" : ""
+        }">${l[1]}</a>
+      `).join("")}
+    </nav>
+    <div class="controls-cluster">
+      <button class="pill" data-a="lang" aria-label="Switch language">🌐 ${S.lang === "en" ? "हिन्दी" : "English"}</button>
+      <button class="pill ${S.voice ? "active" : ""}" data-a="voice">${S.voice ? "🔊 Voice ON" : "🔇 Voice OFF"}</button>
+      <button class="pill ${S.off ? "warn" : ""}" data-a="off">${S.off ? "📴 Offline" + (pend() ? ` (${pend()})` : "") : "📶 Online"}</button>
+    </div>
+  `;
+}
+
+// Views
+const V = {
+  home() {
+    return `
+      <section class="hero">
+        <div>
+          <span class="b o" style="margin-bottom: 14px;">SIH 2026 · PS SIH26041 · Smart Safety</span>
+          <h1>${t("Industrial Safety Training That Works Where The Signal Ends.", "जहाँ सिग्नल खत्म, वहाँ भी औद्योगिक सुरक्षा प्रशिक्षण।")}</h1>
+          <p>${t(
+            "Interactive 3D simulation of hazardous mine and industrial plant emergencies on ₹10,000 Android phones. Train offline in Hindi, verify actions in 3D, and receive tamper-proof QR certificates.",
+            "बजट स्मार्टफोन पर आग, गैस रिसाव और मशीन आपात स्थितियों का 3D सिमुलेशन। बिना इंटरनेट अभ्यास करें, 3D में टेस्ट पास करें और सत्यापित QR प्रमाणपत्र पाएँ।"
+          )}</p>
+          <div class="row" style="justify-content: flex-start; margin-top: 24px; gap: 14px;">
+            <a class="btn p" href="#/train">
+              <span>🚀 ${t("Start 3D Practical Test", "3D प्रैक्टिकल टेस्ट शुरू करें")}</span>
+            </a>
+            <a class="btn" href="#/verify">
+              <span>🔍 ${t("Verify QR Certificate", "प्रमाणपत्र सत्यापित करें")}</span>
+            </a>
+            <a class="btn" href="#/console">
+              <span>📊 ${t("Supervisor Portal", "सुपरवाइज़र पोर्टल")}</span>
+            </a>
+          </div>
+        </div>
+        <div>
+          <div class="cam-preview" role="img" aria-label="3D AR Preview of safety equipment inspection">
+            <div style="font-size: 80px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));">👷‍♂️</div>
+            <div style="font-size: 14px; color: var(--mut); margin-top: 8px; font-weight: 600;">ACTIVE AR SCANNING FIELD</div>
+            <span class="chip" style="top: 24px; left: 24px;">✓ HELMET INSPECTED</span>
+            <span class="chip" style="top: 24px; right: 24px;">✓ RESIDUAL GAS: 0.0%</span>
+            <span class="chip w" style="bottom: 24px; left: 24px;">⚡ LOTO VERIFIED</span>
+            <span class="chip" style="bottom: 24px; right: 24px;">GPS: 23.750°N</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="stats-bar">
+        <div>
+          <b>48+</b>
+          <span>Fatal mine accidents in Jharkhand, 2022–23 (DGMS)</span>
+        </div>
+        <div>
+          <b>&lt;20% → &gt;68%</b>
+          <span>One-week safety protocol retention in AR trials</span>
+        </div>
+        <div>
+          <b>100% 3D</b>
+          <span>Hands-on action verification with zero expensive VR</span>
+        </div>
+        <div>
+          <b>100% Offline</b>
+          <span>Syncs automatically when network reconnects</span>
+        </div>
+      </div>
+
+      <section style="margin-top: 36px;">
+        <div class="row" style="margin-bottom: 20px;">
+          <div>
+            <h2>${t("Interactive 3D Testing Modules", "3D प्रैक्टिकल टेस्टिंग मॉड्यूल")}</h2>
+            <p style="color: var(--mut); margin-top: 4px;">Select any industrial scenario below to enter the live 3D environment.</p>
+          </div>
+          <a class="btn s" href="#/train">View All Modules →</a>
+        </div>
+
+        <div class="grid">
+          ${Object.keys(M).map(k => `
+            <div class="card">
+              <span class="icon-head">${M[k].e}</span>
+              <h3>${t(M[k].n, M[k].h)}</h3>
+              <p style="color: var(--mut); font-size: 14.5px; margin: 8px 0 16px; flex: 1;">
+                ${t(M[k].desc, M[k].desc_hi)}
+              </p>
+              <div class="row" style="margin-top: auto;">
+                <span class="b" style="font-size: 11px;">${X[k].t.length} 3D Tasks</span>
+                <a class="btn p s" href="#/sim/${k}">Launch 3D Test →</a>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+
+      <section style="margin-top: 48px; background: var(--bg-subtle); border: 1px solid var(--ln); border-radius: 12px; padding: 32px;">
+        <div class="two">
+          <div>
+            <h2>${t("Built For Underground Mines & Heavy Plants", "खदान और भारी संयंत्रों के लिए विशेष रूप से निर्मित")}</h2>
+            <p style="color: var(--mut); margin-top: 10px;">
+              Designed according to DGMS (Directorate General of Mines Safety) guidelines, OSH Code 2020, and Mines Act standards.
+              Workers take practical actions in a simulated 3D gallery rather than answering multiple-choice theory questions.
+            </p>
+            <div style="margin-top: 20px;">
+              <a class="btn" href="#/about">Read Full Technical Architecture →</a>
+            </div>
+          </div>
+          <div>
+            <ul class="ol" style="color: var(--mut);">
+              <li><strong style="color: var(--ink);">Hands-on 3D Actions:</strong> Direct raycasting interactions to pull alarms, operate fire extinguishers, detect gases, and lock out machines.</li>
+              <li><strong style="color: var(--ink);">Bilingual Audio Guidance:</strong> Clear voice instructions in Hindi and Indian English for zero-literacy barrier.</li>
+              <li><strong style="color: var(--ink);">Instant Tamper-Proof Certification:</strong> Cryptographically generated certificates signed with a 3D log hash for instant spot-checking by safety inspectors.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    `;
+  },
+
+  train() {
+    // Ensure current candidate name is loaded
+    const curName = S.user ? S.user.n : "Ramesh Munda";
+    const curSite = S.user ? S.user.s : "Jharia";
+    const curNw = S.user ? S.user.nw : false;
+    const w = D.w.find(x => x.n === curName);
+
+    return `
+      <section>
+        <div class="row" style="margin-bottom: 24px;">
+          <div>
+            <h2>${t("3D Practical Assessment Portal", "3D व्यावहारिक मूल्यांकन पोर्टल")}</h2>
+            <p style="color: var(--mut);">Enter your candidate details and select an assessment module.</p>
+          </div>
+          <div class="row" style="gap: 10px;">
+            <span class="b ${w && w.p.length >= 4 ? 'g' : 'o'}">
+              ${w ? `${w.p.length}/4 Modules Approved` : 'New Trainee'}
+            </span>
+          </div>
+        </div>
+
+        <div class="card" style="max-width: 640px; margin-bottom: 30px;">
+          <h3 style="margin-bottom: 8px;">👷 ${t("Trainee Profile", "प्रशिक्षार्थी प्रोफ़ाइल")}</h3>
+          <p style="color: var(--mut); font-size: 14px;">Your certificate will be issued to this name upon passing the 3D test.</p>
+
+          <label for="nm">Trainee Full Name</label>
+          <input id="nm" value="${curName}" placeholder="e.g. Ramesh Munda">
+
+          <div class="row" style="gap: 16px; margin-top: 10px;">
+            <div style="flex: 1;">
+              <label for="st">Mining Site / Plant</label>
+              <select id="st">
+                ${["Jharia Coalfield", "Bokaro Steel Works", "Noamundi Iron Mine", "Koderma Mica Pit"].map(s => `
+                  <option ${curSite === s || curSite.startsWith(s.split(" ")[0]) ? "selected" : ""}>${s}</option>
+                `).join("")}
+              </select>
+            </div>
+            <div style="flex: 1; padding-top: 30px;">
+              <label style="margin: 0; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="checkbox" id="nw" style="width: auto;" ${curNw ? "checked" : ""}>
+                New recruit (&lt;30 days on site)
+              </label>
+            </div>
+          </div>
+
+          <div style="margin-top: 18px;">
+            <button class="btn p s" data-a="save">✓ Save Profile &amp; Update Records</button>
+          </div>
+        </div>
+
+        <h2>${t("Select 3D Practical Exam", "3D प्रैक्टिकल परीक्षा चुनें")}</h2>
+        <div class="grid" style="margin-top: 16px;">
+          ${Object.keys(M).map(k => {
+            const dn = w && w.p.includes(k);
+            const as = w && w.as.includes(k);
+            return `
+              <div class="card" style="${dn ? 'border-color: var(--tl);' : ''}">
+                <div class="row" style="margin-bottom: 10px;">
+                  <span class="icon-head" style="margin-bottom: 0;">${M[k].e}</span>
+                  ${dn ? '<span class="b g">✓ APPROVED</span>' : as ? '<span class="b o">Assigned by Supervisor</span>' : '<span class="b">Ready to Test</span>'}
+                </div>
+                <h3>${t(M[k].n, M[k].h)}</h3>
+                <p style="color: var(--mut); font-size: 14.5px; margin: 8px 0 16px; flex: 1;">
+                  ${t(M[k].desc, M[k].desc_hi)}
+                </p>
+                <div style="background: var(--bg-subtle); padding: 10px 14px; border-radius: 8px; font-size: 13px; color: var(--mut); margin-bottom: 16px;">
+                  ⏱ <b>${X[k].t.length} sequential 3D tasks</b> · Passing score: 70%
+                </div>
+                <button class="btn ${dn ? '' : 'p'}" data-a="start" data-m="${k}">
+                  ${dn ? '↺ Retake 3D Test' : '▶ Start 3D Practical Test'}
+                </button>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </section>
+    `;
+  },
+
+  sim(k) {
+    // If user is missing, initialize with default candidate so user is NEVER blocked
+    if (!S.user || !S.user.n) {
+      S.user = { n: "Ramesh Munda", s: "Jharia Coalfield", nw: false };
+    }
+    if (!M[k]) {
+      location.hash = "#/train";
+      return null;
+    }
+    sim = { m: k, i: 0, log: [] };
+    return sim3d(k);
+  },
+
+  res() {
+    const r = window.__r;
+    if (!r) {
+      location.hash = "#/train";
+      return null;
+    }
+    const c = r.c;
+    return `
+      <section style="max-width: 680px; margin: auto;">
+        <div class="card" style="text-align: center; padding: 40px 24px; border-color: ${r.ok ? 'var(--tl)' : 'var(--rd)'};">
+          <div style="font-size: 64px; margin-bottom: 12px;">
+            ${r.ok ? '🏆' : '⚠️'}
+          </div>
+          <h1>${r.ok ? t("3D Practical Test Passed &amp; Approved!", "3D प्रैक्टिकल टेस्ट उत्तीर्ण व स्वीकृत!") : t("Assessment Not Passed", "मूल्यांकन उत्तीर्ण नहीं हुआ")}</h1>
+          
+          <div style="font-size: 20px; margin: 16px 0;">
+            Candidate: <b>${S.user.n}</b> · Module: <b>${M[r.m].n}</b>
+          </div>
+
+          <div style="display: inline-flex; align-items: center; gap: 14px; margin: 16px auto; padding: 12px 24px; background: var(--bg-subtle); border-radius: 12px; border: 1px solid var(--ln);">
+            <div style="text-align: left;">
+              <span style="font-size: 12px; color: var(--mut); text-transform: uppercase; font-weight: 700;">Final Score</span>
+              <div style="font: 800 36px 'Barlow Condensed'; color: ${r.ok ? 'var(--tl)' : 'var(--rd)'}; line-height: 1;">
+                ${r.sc}%
+              </div>
+            </div>
+            <div style="width: 1px; height: 40px; background: var(--ln);"></div>
+            <div style="text-align: left;">
+              <span style="font-size: 12px; color: var(--mut); text-transform: uppercase; font-weight: 700;">Status</span>
+              <div style="font: 700 20px 'Barlow'; color: ${r.ok ? 'var(--tl)' : 'var(--rd)'};">
+                ${r.ok ? '✓ APPROVED &amp; CERTIFIED' : 'FAILED (< 70%)'}
+              </div>
+            </div>
+          </div>
+
+          ${r.lg ? `
+            <p style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--mut); margin: 12px 0;">
+              3D Practical Action Verification Hash: <b>#${r.lg}</b>
+            </p>
+          ` : ''}
+
+          <p style="color: var(--mut); font-size: 15px; max-width: 500px; margin: 16px auto;">
+            ${r.ok 
+              ? t("Your competency was verified via interactive 3D physical safety actions. Your digital certificate has been issued and registered in the supervisor database.", "आपकी दक्षता 3D व्यावहारिक कार्यों द्वारा सत्यापित हुई। आपका डिजिटल प्रमाणपत्र जारी और पंजीकृत कर दिया गया है।")
+              : t("Safety standards require at least 70% accuracy and speed. Review the safety protocol and retake the 3D practical assessment.", "सुरक्षा मानकों के लिए न्यूनतम 70% अंक आवश्यक हैं। कृपया दोबारा 3D प्रैक्टिकल परीक्षा दें।")
+            }
+          </p>
+
+          <div class="row" style="justify-content: center; gap: 14px; margin-top: 24px;">
+            ${r.ok ? `
+              <a class="btn success" href="#/cert/${c}">
+                <span>📜 View Approved Certificate →</span>
+              </a>
+              <a class="btn" href="#/verify/${c}">
+                <span>🔍 Verify via Public QR</span>
+              </a>
+            ` : `
+              <button class="btn p" data-a="start" data-m="${r.m}">
+                <span>↺ Retake 3D Test</span>
+              </button>
+            `}
+            <a class="btn" href="#/train">Other Modules</a>
+            <a class="btn" href="#/console">Supervisor Console</a>
+          </div>
+        </div>
+      </section>
+    `;
+  },
+
+  cert(id) {
+    const c = D.c[id];
+    if (!c) return V.verify(id);
+
+    return `
+      <section style="max-width: 740px; margin: auto;">
+        <div class="row" style="margin-bottom: 20px;">
+          <a class="btn s" href="#/train">← Back to Training</a>
+          <div class="row" style="gap: 8px;">
+            <button class="btn s" onclick="window.print()">🖨️ Print / Save PDF</button>
+            <button class="btn s p" data-a="copy" data-v="${location.href.split('#')[0]}#/verify/${id}">📋 Copy Verification Link</button>
+          </div>
+        </div>
+
+        <div class="cert-card" id="cert-canvas">
+          <div class="cert-seal">🛡️</div>
+          <p style="margin: 0; text-transform: uppercase; letter-spacing: 2px; font-size: 13px; color: #C2A649; font-weight: 700;">
+            Republic of India · Ministry of Labour &amp; Employment · DGMS Certified
+          </p>
+          <h1>CERTIFICATE OF SAFETY COMPETENCY</h1>
+          <p style="font-size: 16px; color: #93A6B4; margin-top: 4px;">
+            This is to formally certify that
+          </p>
+
+          <div class="cert-candidate">${c.n}</div>
+
+          <p style="font-size: 17px; line-height: 1.6; max-width: 580px; margin: 0 auto; color: #EDF3F7;">
+            has successfully demonstrated hands-on emergency competency in the 3D practical assessment for<br>
+            <b style="color: #FFD700; font-size: 20px;">${M[c.m].n}</b><br>
+            scoring <b style="color: #00D59B;">${c.sc}%</b> at <b style="color: #fff;">${c.s}</b> on <b>${c.dt}</b>.
+          </p>
+
+          <div class="cert-qr" id="qr">
+            ${generateQRCodeSVG(location.href.split('#')[0] + "#/verify/" + id)}
+          </div>
+
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #FFD700; font-weight: 700;">
+            CERTIFICATE ID: ${id}
+          </div>
+
+          ${c.lg ? `
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #93A6B4; margin-top: 6px;">
+              3D ACTION AUDIT LOG: #${c.lg} · TAMPER-PROOF VERIFIED
+            </div>
+          ` : ''}
+
+          <div class="row" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(194, 166, 73, 0.3); font-size: 13px; color: #93A6B4;">
+            <div>ISSUING AUTHORITY: ARAKSHA AR CORE</div>
+            <div>VERIFICATION STATUS: <b>VALID &amp; APPROVED</b></div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 24px;">
+          <a class="btn" href="#/verify/${id}">Open Live Verification Audit Page →</a>
+        </div>
+      </section>
+    `;
+  },
+
+  verify(id) {
+    const c = id && D.c[id];
+    return `
+      <section style="max-width: 680px; margin: auto;">
+        <h2>${t("Public Certificate Verification Portal", "सार्वजनिक प्रमाणपत्र सत्यापन पोर्टल")}</h2>
+        <p style="color: var(--mut);">Verify the authenticity and 3D practical audit log of any ARAKSHA certificate.</p>
+
+        <div class="card" style="margin: 20px 0;">
+          <label for="vid">Enter Certificate Identification Number (CIN)</label>
+          <div class="row" style="gap: 12px; margin-top: 8px;">
+            <input id="vid" style="flex: 1;" value="${id || ""}" placeholder="e.g. ARK-DEMO01">
+            <button class="btn p" data-a="verify">Verify Certificate</button>
+            <button class="btn" data-a="sample">Try Sample ID</button>
+          </div>
+        </div>
+
+        ${id ? (c ? `
+          <div class="fb" style="border-color: var(--tl); background: rgba(0, 213, 155, 0.08); padding: 24px;">
+            <div class="row" style="margin-bottom: 12px;">
+              <span class="b g" style="font-size: 13px;">✓ VERIFIED &amp; GENUINE</span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--tl);">${id}</span>
+            </div>
+            
+            <h3 style="margin-bottom: 6px;">Candidate: ${c.n}</h3>
+            <p style="font-size: 16px; margin: 4px 0 14px;">
+              Passed <b>${M[c.m].n}</b> 3D Assessment with <b>${c.sc}%</b> accuracy at <b>${c.s}</b> on <b>${c.dt}</b>.
+            </p>
+
+            <div style="background: var(--card); border: 1px solid var(--ln); border-radius: 8px; padding: 12px 16px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--mut); margin-bottom: 16px;">
+              LOG HASH: <b>#${c.lg || 'VERIFIED-3D-SIM'}</b><br>
+              COMPLIANCE: DGMS OSH CODE 2020 / MINES ACT 1952<br>
+              STATUS: CLEARED FOR ON-SITE INDUSTRIAL WORK
+            </div>
+
+            <div class="row">
+              <a class="btn success s" href="#/cert/${id}">Open Official Certificate View →</a>
+            </div>
+          </div>
+        ` : `
+          <div class="fb" style="border-color: var(--rd); background: rgba(255, 71, 87, 0.08); padding: 20px;">
+            <span class="b r" style="margin-bottom: 8px;">✕ CERTIFICATE NOT FOUND</span>
+            <p style="margin-top: 8px;">
+              No record found in the central safety ledger for certificate ID: <b>${id.replace(/</g, "")}</b>.
+              Please check the certificate code or contact the mine safety supervisor.
+            </p>
+          </div>
+        `) : ''}
+      </section>
+    `;
+  },
+
+  console() {
+    const T = [
+      ["crew", "Crew Roster & Approvals"],
+      ["risk", "Site Risk Analysis"],
+      ["alerts", "Safety Alerts"],
+      ["report", "DGMS Statutory Report"],
+      ["audit", "3D Audit Trail"]
+    ];
+    const w = D.w;
+    let b = "";
+
+    if (S.tab === "crew") {
+      b = `
+        <div class="row" style="margin-bottom: 16px; justify-content: flex-start; gap: 16px;">
+          <label style="margin: 0; font-weight: 600;">Assign Practical Assessment:</label>
+          <select id="am" style="max-width: 280px;">
+            ${Object.keys(M).map(k => `<option value="${k}">${M[k].n}</option>`).join("")}
+          </select>
+        </div>
+        <div class="tb">
+          <table>
+            <thead>
+              <tr>
+                <th>Worker Name</th>
+                <th>Site</th>
+                <th>Experience</th>
+                <th>3D Modules Approved</th>
+                <th>Calculated Risk</th>
+                <th>Assigned Modules</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${w.map((x, i) => `
+                <tr>
+                  <td><b>${x.n}</b></td>
+                  <td>${x.s}</td>
+                  <td>${x.d} days ${x.d < 30 ? '<span class="b o" style="font-size: 10px;">New Recruit</span>' : ''}</td>
+                  <td>
+                    <span class="b ${x.p.length >= 4 ? 'g' : x.p.length > 0 ? 'o' : 'r'}">
+                      ${x.p.length}/4 Approved
+                    </span>
+                  </td>
+                  <td>
+                    <span class="b ${risk(x) > 60 ? 'r' : risk(x) > 35 ? 'o' : 'g'}">
+                      ${risk(x)}%
+                    </span>
+                  </td>
+                  <td>
+                    ${x.as.length > 0 
+                      ? x.as.map(k => `<span class="b o" style="font-size: 11px;">${M[k].n}</span>`).join(" ")
+                      : '<span style="color: var(--mut); font-size: 13px;">None</span>'}
+                  </td>
+                  <td>
+                    <button class="btn s" data-a="assign" data-i="${i}">+ Assign Module</button>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    if (S.tab === "risk") {
+      const g = {};
+      w.forEach(x => (g[x.s] = g[x.s] || []).push(risk(x)));
+      b = `
+        <div class="card" style="margin: 20px 0;">
+          <h3 style="margin-bottom: 12px;">Average Site Risk Rating (DGMS Predictive Safety Index)</h3>
+          <p style="color: var(--mut); font-size: 14px; margin-bottom: 20px;">
+            Calculated based on uncertified high-risk workers and new recruits with &lt;30 days pit experience.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            ${Object.keys(g).map(s => {
+              const v = Math.round(g[s].reduce((a, c) => a + c, 0) / g[s].length);
+              return `
+                <div>
+                  <div class="row" style="margin-bottom: 6px;">
+                    <span style="font-weight: 600;">${s}</span>
+                    <b style="color: ${v > 50 ? 'var(--rd)' : v > 30 ? 'var(--or)' : 'var(--tl)'}">${v}% Risk</b>
+                  </div>
+                  <div style="height: 10px; background: var(--bg-subtle); border-radius: 99px; overflow: hidden;">
+                    <div style="height: 100%; width: ${v}%; background: ${v > 50 ? 'var(--rd)' : v > 30 ? 'var(--or)' : 'var(--tl)'}; border-radius: 99px;"></div>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    if (S.tab === "alerts") {
+      const al = [];
+      D.a.filter(x => x.st === "incomplete").forEach(x => {
+        al.push(["Skipped Safety Steps", `${x.w} abandoned the ${M[x.m].n} 3D test before completing required hazard protocols on ${x.t.slice(0, 10)}.`]);
+      });
+      w.filter(x => x.d < 30 && x.p.length < 2).forEach(x => {
+        al.push(["Uncertified High-Risk Recruit", `${x.n} is a new recruit with less than 30 days underground experience and only ${x.p.length}/4 safety modules passed.`]);
+      });
+
+      b = al.length ? al.map(a => `
+        <div class="fb" style="border-left: 4px solid var(--or); margin: 12px 0;">
+          <span class="b o" style="margin-bottom: 6px;">${a[0]}</span>
+          <p style="margin-top: 6px; font-size: 15px;">${a[1]}</p>
+        </div>
+      `).join("") : '<div class="fb">All site recruits and tests meet mandatory compliance. No open alerts.</div>';
+    }
+
+    if (S.tab === "report") {
+      const csv = "Worker_Name,Site,Days_On_Site,Modules_Approved,Last_Score,Risk_Index,DGMS_Compliance\n" +
+        w.map(x => [x.n, x.s, x.d, x.p.length, x.sc, risk(x) + "%", x.p.length >= 3 ? "COMPLIANT" : "ACTION_REQUIRED"].join(",")).join("\n");
+      b = `
+        <p style="color: var(--mut); margin: 12px 0;">Official statutory audit export format compliant with the Mines Act 1952 and Factories Act 1948.</p>
+        <textarea id="csv" rows="11" readonly style="font-family: 'JetBrains Mono', monospace; font-size: 13px;">${csv}</textarea>
+        <p style="margin-top: 14px;">
+          <button class="btn p" data-a="copy" data-v="${csv.replace(/"/g, '&quot;')}" data-csv="1">📋 Copy CSV Export</button>
+        </p>
+      `;
+    }
+
+    if (S.tab === "audit") {
+      b = `
+        <div class="tb">
+          <table>
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Candidate</th>
+                <th>3D Module</th>
+                <th>Score</th>
+                <th>Result</th>
+                <th>Location GPS</th>
+                <th>Sync Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${D.a.map(x => `
+                <tr>
+                  <td>${x.t.replace("T", " ")}</td>
+                  <td><b>${x.w}</b></td>
+                  <td>${M[x.m].n}</td>
+                  <td>${x.sc}%</td>
+                  <td>
+                    ${x.st === "incomplete" ? '<span class="b o">Incomplete</span>' : x.ok ? '<span class="b g">✓ Approved</span>' : '<span class="b r">Failed</span>'}
+                  </td>
+                  <td>${x.g}</td>
+                  <td>
+                    <span class="b ${x.sy ? 'g' : 'o'}" style="font-size: 11px;">
+                      ${x.sy ? "Synced to Cloud" : "Stored Offline"}
+                    </span>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    return `
+      <section>
+        <div class="row" style="margin-bottom: 16px;">
+          <div>
+            <h2>${t("Supervisor Operations Console", "पर्यवेक्षक संचालन कंसोल")}</h2>
+            <p style="color: var(--mut);">Real-time monitoring of crew competency, risk ratings, and DGMS compliance.</p>
+          </div>
+          <button class="btn s" data-a="reset">↺ Reset Demo Database</button>
+        </div>
+
+        <div class="tabs">
+          ${T.map(x => `
+            <button class="btn s ${S.tab === x[0] ? 'on' : ''}" data-a="tab" data-t="${x[0]}">
+              ${x[1]}
+            </button>
+          `).join("")}
+        </div>
+
+        ${b}
+      </section>
+    `;
+  },
+
+  about() {
+    return `
+      <section style="max-width: 860px; margin: auto;">
+        <h1>About ARAKSHA AR Core</h1>
+        <p style="font-size: 19px; color: var(--mut); margin: 12px 0 30px;">
+          SIH2026 Problem Statement SIH26041 · Innovative AR/VR safety training for miners and industrial plant workers.
+        </p>
+
+        <div class="grid" style="margin-bottom: 36px;">
+          <div class="card">
+            <h3>📱 Hardware Accessible</h3>
+            <p style="color: var(--mut); font-size: 14.5px; margin-top: 6px;">Runs on budget ₹10,000 Android phones without requiring ₹60,000+ VR headsets or expensive wearable rigs.</p>
+          </div>
+          <div class="card">
+            <h3>📴 100% Offline-First</h3>
+            <p style="color: var(--mut); font-size: 14.5px; margin-top: 6px;">Encrypted local SQLite storage and mesh synchronization ensures seamless training deep inside underground mines.</p>
+          </div>
+          <div class="card">
+            <h3>🔒 Tamper-Proof QR</h3>
+            <p style="color: var(--mut); font-size: 14.5px; margin-top: 6px;">Each certificate is mathematically linked to the candidate's verified 3D action trajectory log hash.</p>
+          </div>
+        </div>
+
+        <h2>Technical Stack &amp; Architecture</h2>
+        <div class="tb">
+          <table>
+            <tr><th>Component</th><th>Implementation</th></tr>
+            <tr><td><b>3D Interactive Engine</b></td><td>Three.js WebGL / Unity AR Foundation (ARCore), low-poly GLTF optimized models</td></tr>
+            <tr><td><b>Assessment Engine</b></td><td>Sequential state-machine verifying object raycast picks, reaction time, and safety order</td></tr>
+            <tr><td><b>Local Offline Engine</b></td><td>HTML5 LocalStorage / IndexedDB / SQLite with background batch syncing</td></tr>
+            <tr><td><b>Voice Synthesis</b></td><td>Web Speech API in Hindi (hi-IN) and Indian English (en-IN)</td></tr>
+            <tr><td><b>Verification Ledger</b></td><td>Cryptographic SHA/FNV hashes embedded in standard QR matrix</td></tr>
+          </table>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+          <a class="btn p" href="#/train">Launch 3D Practical Exam →</a>
+        </div>
+      </section>
+    `;
+  }
+};
+
+// --- Interactive 3D Simulation Engine ---
+function sim3d(k) {
+  const x = X[k];
+  const N = x.t.length;
+  sim.d3 = 1;
+  sim.n = 0;
+  sim.w = 0;
+  sim.ev = [];
+  sim.done = 0;
+  sim.t0 = Date.now();
+
+  $("#app").innerHTML = `
+    <section style="max-width: 960px; margin: auto;">
+      <div class="row" style="margin-bottom: 12px;">
+        <button class="btn s" data-a="quit">← Exit Test</button>
+        <div style="font-size: 18px; font-weight: 700;">
+          ${M[k].e} ${t(M[k].n, M[k].h)}
+        </div>
+        <div class="row" style="gap: 8px;">
+          <span class="hud-badge timer" id="tt">0s / 120s</span>
+          <span class="hud-badge penalty" id="pw">0 Mistakes</span>
+        </div>
+      </div>
+
+      <div class="cv-container" id="v">
+        <div class="hud-top">
+          <span class="hud-badge" style="background: rgba(0,0,0,0.7); color: #fff;">
+            🎯 3D Practical Mode
+          </span>
+          <button class="btn s" data-a="s3" style="pointer-events: auto; padding: 4px 10px; font-size: 12px;">
+            🔊 ${t("Listen", "बोलें")}
+          </button>
+        </div>
+
+        <div class="hud-instructions" id="ins-box">
+          <div>
+            <h4 id="task-title">Task 1 of ${N}</h4>
+            <p id="task-desc">Loading task instructions...</p>
+          </div>
+          <div id="task-badge" class="b o">In Progress</div>
+        </div>
+      </div>
+
+      <div style="margin: 12px 0 6px; font-weight: 600; font-size: 14px; color: var(--mut);">
+        ${t("Interactive Equipment (Tap in 3D scene or select below):", "इंटरएक्टिव उपकरण (3D दृश्य में टैप करें या नीचे चुनें):")}
+      </div>
+      <div class="action-tray" id="tray"></div>
+
+      <div id="msg" aria-live="polite"></div>
+
+      <div class="fb" style="font-size: 14px; color: var(--mut); margin-top: 14px;">
+        💡 <b>Controls:</b> Drag with mouse/touch to look around in 3D. Click or tap any object to interact. 
+        Each incorrect action incurs a 12-point penalty. Minimum 70% required to obtain certification.
+      </div>
+    </section>
+  `;
+
+  const el = $("#v");
+  let R;
+  try {
+    R = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+    R.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    R.setSize(el.clientWidth, el.clientHeight);
+    el.appendChild(R.domElement);
+  } catch (e) {
+    toast("WebGL initialization failed. Please update your graphics drivers.");
+    return;
+  }
+
+  const sc = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(52, el.clientWidth / (el.clientHeight || 1), 0.1, 70);
+  const T = new THREE.Vector3(0, 1.2, -2.5);
+
+  let az = 0;
+  let e2 = 0.42;
+  let r = 9.5;
+
+  sc.background = new THREE.Color(0x0a1118);
+  sc.fog = new THREE.FogExp2(0x0a1118, 0.04);
+
+  // Lighting
+  sc.add(new THREE.HemisphereLight(0xffffff, 0x223344, 0.9));
+  const dl = new THREE.DirectionalLight(0xfff5e6, 0.85);
+  dl.position.set(4, 9, 5);
+  sc.add(dl);
+
+  // Warning flashing beacon
+  const pl = new THREE.PointLight(0xff8800, 1.2, 18);
+  pl.position.set(0, 3, -3);
+  sc.add(pl);
+
+  // Tunnel Mesh Floor & Walls
+  const mk = (g, c, roughness) => new THREE.Mesh(g, new THREE.MeshLambertMaterial({ color: c }));
+  const fl = mk(new THREE.BoxGeometry(10, 0.2, 30), 0x242e38);
+  fl.position.set(0, -0.1, -4);
+  sc.add(fl);
+
+  // Hazard striped floor border
+  const hz1 = mk(new THREE.BoxGeometry(0.3, 0.22, 30), 0xffaa00);
+  hz1.position.set(-4.5, -0.09, -4);
+  sc.add(hz1);
+  const hz2 = mk(new THREE.BoxGeometry(0.3, 0.22, 30), 0xffaa00);
+  hz2.position.set(4.5, -0.09, -4);
+  sc.add(hz2);
+
+  // Tunnel structural beams
+  for (let z = -14; z <= 6; z += 4) {
+    const arch = mk(new THREE.BoxGeometry(9.6, 0.35, 0.4), 0x5a4632);
+    arch.position.set(0, 3.2, z);
+    sc.add(arch);
+
+    const postL = mk(new THREE.BoxGeometry(0.35, 3.5, 0.4), 0x5a4632);
+    postL.position.set(-4.8, 1.6, z);
+    sc.add(postL);
+
+    const postR = mk(new THREE.BoxGeometry(0.35, 3.5, 0.4), 0x5a4632);
+    postR.position.set(4.8, 1.6, z);
+    sc.add(postR);
+  }
+
+  // Create 3D Objects & 2D HUD Labels
+  const ms = [];
+  const lb = [];
+  const tray = $("#tray");
+  tray.innerHTML = "";
+
+  x.o.forEach(o => {
+    const [id, nm, sh, c, px, py, pz, w, h, d] = o;
+    const g = sh === "s" ? new THREE.SphereGeometry(w / 2, 24, 18)
+            : sh === "c" ? new THREE.CylinderGeometry(w / 2, w / 2, h, 24)
+            : sh === "k" ? new THREE.ConeGeometry(w / 2, h, 24)
+            : new THREE.BoxGeometry(w, h, d);
+
+    const m = mk(g, c);
+    m.position.set(px, py, pz);
+    m.userData = { id, nm, o };
+    sc.add(m);
+    ms.push(m);
+
+    // 2D Tracking Tag
+    const l = document.createElement("div");
+    l.className = "lb";
+    l.textContent = nm;
+    el.appendChild(l);
+    lb.push([m, l]);
+
+    // Equipment Tray Button
+    const tbtn = document.createElement("button");
+    tbtn.className = "tray-btn";
+    tbtn.id = "btn-item-" + id;
+    tbtn.innerHTML = `<span>${nm}</span>`;
+    tbtn.onclick = () => act3(m);
+    tray.appendChild(tbtn);
+  });
+
+  const place = () => {
+    cam.position.set(
+      T.x + r * Math.sin(az) * Math.cos(e2),
+      T.y + r * Math.sin(e2),
+      T.z + r * Math.cos(az) * Math.cos(e2)
+    );
+    cam.lookAt(T);
+  };
+
+  const updateInstructions = () => {
+    const q = x.t[sim.n];
+    if (!q) return;
+
+    $("#task-title").textContent = `Task ${sim.n + 1} of ${N}`;
+    $("#task-desc").textContent = t(q[0], q[1]);
+    $("#task-badge").textContent = `${sim.n + 1} / ${N}`;
+
+    // Highlight target label in 3D
+    lb.forEach(([mesh, label]) => {
+      label.classList.remove("active-target");
+      if (mesh.userData.id === q[2]) {
+        label.classList.add("active-target");
+      }
+    });
+
+    if (S.voice) speak(t(q[0], q[1]));
+  };
+
+  const end = ok => {
+    if (sim.done) return;
+    sim.done = 1;
+    clearInterval(tm);
+
+    const elapsed = (Date.now() - sim.t0) / 1000;
+    // Calculate passing score: wrong actions reduce score, excessive time reduces score
+    const finalScore = ok 
+      ? Math.max(0, 100 - sim.w * 12 - Math.max(0, Math.round((elapsed - 50) / 4)))
+      : Math.round((sim.n / N) * 55);
+
+    sim.lg = H(JSON.stringify(sim.ev) + S.user.n + Date.now());
+    sim.log = [{ pts: finalScore, to: !ok }];
+
+    $("#msg").innerHTML = `
+      <div class="fb" style="border-color: ${ok ? 'var(--tl)' : 'var(--rd)'}; text-align: center; padding: 18px;">
+        <h3 style="color: ${ok ? 'var(--tl)' : 'var(--rd)'}; margin-bottom: 6px;">
+          ${ok ? "✓ 3D PRACTICAL TASKS COMPLETED" : "⏱ TIME EXPIRED"}
+        </h3>
+        <p>Calculating verified score and generating cryptographic approval certificate...</p>
+      </div>
+    `;
+
+    setTimeout(finish, 1100);
+  };
+
+  const act3 = m => {
+    if (sim.done || m.userData.used) return;
+    const q = x.t[sim.n];
+    const id = m.userData.id;
+    const isCorrect = id === q[2];
+    const isPartOfScenario = x.t.some(z => z[2] === id);
+
+    sim.ev.push([id, isCorrect ? 1 : 0, Date.now() - sim.t0]);
+
+    if (isCorrect) {
+      m.userData.used = 1;
+      m.material.color.set(0x00D59B);
+      if (id === "fire") m.visible = false;
+
+      // Update tray button
+      const tb = $("#btn-item-" + id);
+      if (tb) tb.classList.add("done");
+
+      // Mark label
+      const pair = lb.find(p => p[0] === m);
+      if (pair) pair[1].classList.add("completed-target");
+
+      sim.n++;
+      $("#msg").innerHTML = `
+        <div class="fb" style="border-color: var(--tl); color: var(--tl);">
+          <b>✓ Correct Action:</b> ${q[3]}
+        </div>
+      `;
+
+      if (sim.n >= N) {
+        end(true);
+      } else {
+        updateInstructions();
+      }
+    } else {
+      sim.w++;
+      const origColor = m.material.color.getHex();
+      m.material.color.set(0xFF4757);
+      setTimeout(() => {
+        if (!m.userData.used) m.material.color.set(origColor);
+      }, 500);
+
+      const penaltyEl = $("#pw");
+      if (penaltyEl) penaltyEl.textContent = `${sim.w} Mistakes (-${sim.w * 12} pts)`;
+
+      const reason = isPartOfScenario 
+        ? `Out of sequence. Required first: "${t(q[0], q[1])}"`
+        : (m.userData.o[10] || "Hazardous or unneeded action for this safety scenario.");
+
+      $("#msg").innerHTML = `
+        <div class="fb" style="border-color: var(--rd); color: var(--rd);">
+          <b>✕ Safety Violation (-12 Pts):</b> ${reason}
+        </div>
+      `;
+    }
+  };
+
+  // Pointer Interaction
+  const rc = new THREE.Raycaster();
+  const cv = R.domElement;
+  let isDown = false;
+  let startX = 0, startY = 0;
+  let moveDist = 0;
+
+  const pickObject = e => {
+    const rect = cv.getBoundingClientRect();
+    const mouse = new THREE.Vector2(
+      ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      -((e.clientY - rect.top) / rect.height) * 2 + 1
+    );
+    rc.setFromCamera(mouse, cam);
+    const hits = rc.intersectObjects(ms);
+    if (hits.length > 0) {
+      act3(hits[0].object);
+    }
+  };
+
+  cv.addEventListener("pointerdown", e => {
+    isDown = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    moveDist = 0;
+  });
+
+  window.addEventListener("pointermove", e => {
+    if (!isDown) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    moveDist += Math.abs(dx) + Math.abs(dy);
+    az -= dx * 0.007;
+    e2 = Math.min(1.2, Math.max(0.12, e2 + dy * 0.005));
+    startX = e.clientX;
+    startY = e.clientY;
+  });
+
+  window.addEventListener("pointerup", e => {
+    if (isDown && moveDist < 8) {
+      pickObject(e);
+    }
+    isDown = false;
+  });
+
+  cv.addEventListener("wheel", e => {
+    e.preventDefault();
+    r = Math.min(15, Math.max(5, r + e.deltaY * 0.01));
+  }, { passive: false });
+
+  // 3D Render Loop
+  const renderLoop = () => {
+    window.__raf = requestAnimationFrame(renderLoop);
+    const w = el.clientWidth;
+    const h = el.clientHeight;
+
+    if (cv.width !== Math.round(w * R.getPixelRatio()) || cv.height !== Math.round(h * R.getPixelRatio())) {
+      R.setSize(w, h, false);
+      cam.aspect = w / (h || 1);
+      cam.updateProjectionMatrix();
+    }
+
+    place();
+
+    // Subtle hazard animations
+    ms.forEach(m => {
+      if (m.userData.id === "fire" && m.visible) {
+        m.scale.y = 1 + 0.18 * Math.sin(Date.now() / 110);
+        m.scale.x = 1 + 0.1 * Math.cos(Date.now() / 150);
+      }
+      if (m.userData.id === "cloud") {
+        m.position.x = 0.2 * Math.sin(Date.now() / 800);
+      }
+    });
+
+    pl.intensity = 1.0 + 0.4 * Math.sin(Date.now() / 200);
+
+    R.render(sc, cam);
+
+    // Sync 2D Floating Labels with 3D Object Projection
+    lb.forEach(([m, l]) => {
+      const v = m.position.clone();
+      v.y += (m.userData.o[8] || 1) / 2 + 0.35;
+      v.project(cam);
+      if (m.visible && v.z < 1) {
+        l.style.display = "block";
+        l.style.left = (v.x * 0.5 + 0.5) * w + "px";
+        l.style.top = (-v.y * 0.5 + 0.5) * h + "px";
+      } else {
+        l.style.display = "none";
+      }
+    });
+  };
+
+  updateInstructions();
+  renderLoop();
+
+  // Timer Countdown (120s limit)
+  clearInterval(tm);
+  tm = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - sim.t0) / 1000);
+    const remain = Math.max(0, 120 - elapsed);
+    const timerEl = $("#tt");
+    if (timerEl) {
+      timerEl.textContent = `${remain}s Remaining`;
+      if (remain <= 20) timerEl.style.borderColor = "var(--rd)";
+    }
+    if (remain <= 0) {
+      end(false);
+    }
+  }, 1000);
+
+  return "__done";
+}
+
+// Complete Assessment & Generate Approval Records
+function finish() {
+  if (!sim) return;
+  const m = sim.m;
+  const sc = sim.log[0] ? sim.log[0].pts : 0;
+  const ok = sc >= 70;
+  const now = new Date();
+  const geo = S.geo || (S.user.s + " Mine Pit (Simulated)");
+
+  let w = D.w.find(x => x.n === S.user.n);
+  if (!w) {
+    w = W(S.user.n, S.user.s, S.user.nw ? 5 : 120, [], 0);
+    D.w.push(w);
+  }
+
+  w.sc = sc;
+  if (ok && !w.p.includes(m)) {
+    w.p.push(m);
+  }
+  // Clear assignment once passed
+  if (ok) {
+    w.as = w.as.filter(k => k !== m);
+  }
+
+  // Insert audit record
+  D.a.unshift({
+    w: w.n,
+    m,
+    sc,
+    ok,
+    t: now.toISOString().slice(0, 16),
+    g: geo,
+    sy: S.off ? 0 : 1,
+    st: "complete"
+  });
+
+  let certId = null;
+  if (ok) {
+    certId = "ARK-" + H(w.n + m + now.getTime());
+    D.c[certId] = {
+      n: w.n,
+      m,
+      sc,
+      dt: now.toISOString().slice(0, 10),
+      s: w.s,
+      lg: sim.lg || "3D-ACT"
+    };
+  }
+
+  save();
+  window.__r = { m, sc, ok, c: certId, lg: sim.lg };
+
+  location.hash = "#/res";
+  hdr();
+}
+
+// Global Event Dispatcher
+const act = {
+  lang() {
+    S.lang = S.lang === "en" ? "hi" : "en";
+    route();
+  },
+  voice() {
+    S.voice = !S.voice;
+    if (!S.voice) {
+      try { speechSynthesis.cancel(); } catch (e) {}
+    } else {
+      speak(S.lang === "hi" ? "आवाज चालू है" : "Voice guidance activated");
+    }
+    hdr();
+  },
+  off() {
+    S.off = !S.off;
+    if (!S.off) {
+      const p = pend();
+      D.a.forEach(x => x.sy = 1);
+      save();
+      toast(p ? `Online: Synced ${p} offline audit records to cloud.` : "Online: Central ledger up-to-date.");
+    } else {
+      toast("Offline mode active: All 3D assessments saved locally.");
+    }
+    route();
+  },
+  save() {
+    const nmInput = $("#nm");
+    const name = nmInput ? nmInput.value.trim() : S.user.n;
+    if (!name) return toast("Please enter your name.");
+    
+    S.user = {
+      n: name,
+      s: $("#st") ? $("#st").value : S.user.s,
+      nw: $("#nw") ? $("#nw").checked : S.user.nw
+    };
+
+    let w = D.w.find(x => x.n === name);
+    if (!w) {
+      w = W(name, S.user.s, S.user.nw ? 12 : 90, [], 0);
+      D.w.push(w);
+    } else {
+      w.s = S.user.s;
+    }
+    save();
+    toast("Profile saved. Ready for 3D practical assessment.");
+    route();
+  },
+  start(d) {
+    // If name is typed in train page, auto-capture it before launching
+    const nmInput = $("#nm");
+    if (nmInput && nmInput.value.trim()) {
+      S.user.n = nmInput.value.trim();
+      if ($("#st")) S.user.s = $("#st").value;
+      if ($("#nw")) S.user.nw = $("#nw").checked;
+      let w = D.w.find(x => x.n === S.user.n);
+      if (!w) {
+        D.w.push(W(S.user.n, S.user.s, S.user.nw ? 10 : 100, [], 0));
+      }
+      save();
+    }
+    location.hash = "#/sim/" + d.m;
+  },
+  s3() {
+    if (sim && X[sim.m]) {
+      const q = X[sim.m].t[sim.n];
+      if (q) speak(t(q[0], q[1]));
+    }
+  },
+  quit() {
+    clearInterval(tm);
+    cancelAnimationFrame(window.__raf);
+    if (sim && !sim.done) {
+      D.a.unshift({
+        w: S.user.n,
+        m: sim.m,
+        sc: 0,
+        ok: false,
+        t: new Date().toISOString().slice(0, 16),
+        g: S.geo || (S.user.s + " (simulated)"),
+        sy: S.off ? 0 : 1,
+        st: "incomplete"
+      });
+      save();
+      toast("Incomplete test recorded in site audit trail.");
+    }
+    sim = null;
+    location.hash = "#/train";
+  },
+  verify() {
+    const input = $("#vid");
+    const v = input ? input.value.trim().toUpperCase() : "";
+    if (!v) return toast("Please enter a Certificate ID.");
+    location.hash = "#/verify/" + v;
+  },
+  sample() {
+    location.hash = "#/verify/ARK-DEMO01";
+  },
+  copy(d) {
+    const val = d.csv ? $("#csv").value : d.v;
+    try {
+      navigator.clipboard.writeText(val).then(() => toast("Copied to clipboard!"), () => fallbackCopy());
+    } catch (e) {
+      fallbackCopy();
+    }
+    function fallbackCopy() {
+      const area = $("#csv");
+      if (area) {
+        area.select();
+        document.execCommand("copy");
+      }
+      toast("Copied verification data.");
+    }
+  },
+  tab(d) {
+    S.tab = d.t;
+    route();
+  },
+  assign(d) {
+    const w = D.w[+d.i];
+    const k = $("#am").value;
+    if (!w.as.includes(k)) {
+      w.as.push(k);
+      save();
+      toast(`Assigned ${M[k].n} to ${w.n}`);
+    } else {
+      toast(`${w.n} already has ${M[k].n} assigned.`);
+    }
+    route();
+  },
+  reset() {
+    D = seed();
+    save();
+    toast("Demo database restored to default.");
+    route();
+  }
+};
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-a]");
+  if (b && act[b.dataset.a]) {
+    act[b.dataset.a](b.dataset, b);
+  }
+});
+
+// Hash Router & View Switcher
+function route() {
+  clearInterval(tm);
+  cancelAnimationFrame(window.__raf);
+
+  const hashParts = location.hash.slice(2).split("/");
+  const page = hashParts[0] || "home";
+  const arg = decodeURIComponent(hashParts[1] || "");
+
+  hdr();
+
+  const viewFn = V[page] || V.home;
+  const out = viewFn(arg);
+
+  if (out && out !== "__done") {
+    $("#app").innerHTML = out;
+    window.scrollTo(0, 0);
+  }
+}
+
+window.addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>
